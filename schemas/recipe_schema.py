@@ -4,7 +4,7 @@ from typing import Optional, List
 class RecipeBase(BaseModel):
     title: str
     description: Optional[str] = None
-    ingredients: str
+    ingredients: List[str]
     steps: str
     image: Optional[str] = None
 
@@ -14,7 +14,7 @@ class RecipeCreate(RecipeBase):
 class RecipeUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    ingredients: Optional[str] = None
+    ingredients: Optional[List[str]] = None
     steps: Optional[str] = None
     image: Optional[str] = None
     tag_ids: Optional[List[int]] = None
