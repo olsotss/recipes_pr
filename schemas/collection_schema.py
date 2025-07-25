@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -18,7 +19,9 @@ class CollectionUpdate(BaseModel):
 class CollectionRead(CollectionBase):
     id: int
     user_id: int
-    recipes: List[str] = [] 
+    recipes: List[str] = []
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True

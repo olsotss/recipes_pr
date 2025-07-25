@@ -1,31 +1,41 @@
+from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional, List
 
 class RecipeBase(BaseModel):
     title: str
     description: Optional[str] = None
-    ingredients: List[str]
-    steps: str
-    image: Optional[str] = None
+    ingredients: List[str] = None
+    steps: Optional[str] = None
+    photo_url: Optional[str] = None
+    cooking_time: Optional[int] = None
 
 class RecipeCreate(RecipeBase):
-    tag_ids: List[int] = []
+    collection_ids: Optional[List[int]] = []
 
 class RecipeUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    ingredients: Optional[List[str]] = None
+    ingredients: Optional[str] = None
     steps: Optional[str] = None
-    image: Optional[str] = None
-    tag_ids: Optional[List[int]] = None
+    photo_url: Optional[str] = None
+    cooking_time: Optional[int] = None
+    collection_ids: Optional[List[int]] = None
 
 class RecipeRead(RecipeBase):
     id: int
-    average_rating: float
-    author_id: int
-    tags: List[str] = []
+    user_id: int
+    average_rating: Optional[float] = 0.0
+    collections: List[str] = []
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
 
-
+class RecipeCard(BaseModel):
+    id: int
+    title: str
+    description: str
+    preview_image: Optional[str] = None
+    average_rating: Optional[float] = None
