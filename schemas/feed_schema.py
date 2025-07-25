@@ -23,3 +23,4 @@ class FeedRequest(RecipeSearchFilters, Pagination):
 class FeedResponse(BaseModel):
     total: int         
     items: List[RecipeCard]  
+    

@@ -4,11 +4,11 @@ from typing import Optional, List
 
 class RecipeBase(BaseModel):
     title: str
-    description: Optional[str] = None
-    ingredients: List[str] = None
-    steps: Optional[str] = None
-    photo_url: Optional[str] = None
-    cooking_time: Optional[int] = None
+    description: str
+    ingredients: List[str] = []
+    steps: str
+    photo_url: str
+    cooking_time: int
 
 class RecipeCreate(RecipeBase):
     collection_ids: Optional[List[int]] = []
@@ -16,7 +16,7 @@ class RecipeCreate(RecipeBase):
 class RecipeUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    ingredients: Optional[str] = None
+    ingredients: Optional[List[str]] = None
     steps: Optional[str] = None
     photo_url: Optional[str] = None
     cooking_time: Optional[int] = None
