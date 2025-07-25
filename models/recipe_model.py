@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Text, Float
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, Float, func
 from database.database import Base
 from sqlalchemy.orm import relationship
 from models import recipe_tags, collection_recipes
@@ -14,10 +14,12 @@ class Recipe(Base):
     image = Column(String)
     average_rating = Column(Float, default=0.0)
 
-    author_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
-    author = relationship("User", back_populates="recipes")
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    user = relationship("User", back_populates="recipes")
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     comments = relationship("Comment", back_populates="recipe", cascade="all, delete")
     ratings = relationship("Rating", back_populates="recipe", cascade="all, delete")
-    tags = relationship("Tag", secondary=recipe_tags, back_populates="recipes")
     collections = relationship("Collection", secondary=collection_recipes, back_populates="recipes")
