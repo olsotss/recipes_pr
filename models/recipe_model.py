@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, Float, func
+from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, Text, Float, func
 from database.database import Base
 from sqlalchemy.orm import relationship
 from models import collection_recipes
@@ -9,7 +9,7 @@ class Recipe(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(100), nullable=False)
     description = Column(Text)
-    ingredients = Column(Text)
+    ingredients = Column(JSON)
     steps = Column(Text)
     image = Column(String)
     average_rating = Column(Float, default=0.0)
