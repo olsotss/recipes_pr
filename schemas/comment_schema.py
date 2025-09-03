@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel
 
 from schemas.user_schema import UserRead
@@ -8,6 +9,12 @@ class CommentBase(BaseModel):
 
 class CommentCreate(CommentBase):
     recipe_id: int
+
+class CommentUpdate(BaseModel):
+    text: Optional[str] = None
+
+    class Config:
+        orm_mode = True
 
 class CommentRead(CommentBase):
     id: int
