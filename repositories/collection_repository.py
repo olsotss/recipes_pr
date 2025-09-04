@@ -24,6 +24,14 @@ class CollectionRepository:
         await self.db.refresh(collection)
         return collection
     
+    async def get_collections_by_ids(self, ids: List[int]) -> List[Collection]:
+        if not ids:
+            return []
+
+        stmt = select(Collection).filter(Collection.id.in_(ids))
+        result = await self.db.execute(stmt)
+        return result.scalars().all()
+
     async def get_by_id(self, collection_id: int, with_recipes: bool = False) -> Optional[Collection]:
         stmt = select(Collection).filter(Collection.id == collection_id)
         if with_recipes:
