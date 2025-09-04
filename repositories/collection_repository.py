@@ -76,6 +76,7 @@ class CollectionRepository:
 
     async def add_recipe(self, collection_id: int, user_id: int, recipe_id: int) -> Optional[Collection]:
         collection = await self.get_by_id(collection_id, with_recipes=True)
+        
         if not collection or collection.user_id != user_id:
             return None
 
