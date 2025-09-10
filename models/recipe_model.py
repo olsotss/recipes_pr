@@ -13,6 +13,7 @@ class Recipe(Base):
     steps = Column(Text)
     image = Column(String)
     average_rating = Column(Float, default=0.0)
+    cooking_time = Column(Integer, nullable=False, default=0)
 
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     user = relationship("User", back_populates="recipes")
