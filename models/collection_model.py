@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime, func
 from database.database import Base
 from sqlalchemy.orm import relationship
-from models import collection_recipes
+from models.recipe_collection_model import collection_recipes
 
 class Collection(Base):
     __tablename__ = "collections"
