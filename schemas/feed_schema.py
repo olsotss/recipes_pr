@@ -7,7 +7,6 @@ class RecipeSearchFilters(BaseModel):
     title: Optional[str] = None
     ingredients: Optional[List[str]] = None
     author_id: Optional[int] = None
-    collection_id: Optional[int] = None
     min_rating: Optional[float] = None
 
     sort_by: Literal["date", "rating", "title"] = "date"
