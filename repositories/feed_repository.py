@@ -3,7 +3,6 @@ from sqlalchemy import and_, asc, desc, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from models.collection_model import Collection
 from models.recipe_model import Recipe
 from schemas.feed_schema import FeedRequest
 
@@ -23,18 +22,13 @@ class FeedRepository:
         if params.ingredients:
             or_clauses = [Recipe.ingredients.contains([i]) for i in params.ingredients]
             filters.append(or_(*or_clauses))
-        
+
         if params.author_id:
             filters.append(Recipe.user_id == params.author_id)
 
-        if params.collection_id:
-            base_query = base_query.join(Recipe.collections)
-            count_query = count_query.join(Recipe.collections)
-            filters.append(Collection.id == params.collection_id)
-
         if params.min_rating:
             filters.append(Recipe.average_rating >= params.min_rating)
-        
+
         if filters:
             base_query = base_query.filter(and_(*filters))
             count_query = count_query.filter(and_(*filters))
@@ -42,7 +36,7 @@ class FeedRepository:
         order_field = {
             "date": Recipe.created_at,
             "rating": Recipe.average_rating,
-            "title": Recipe.title,
+            "title": Recipe.title
         }[params.sort_by]
 
         direction = desc if params.order == "desc" else asc
@@ -55,5 +49,3 @@ class FeedRepository:
         items = result.scalars().all()
 
         return total, items
-        
-        
