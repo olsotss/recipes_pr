@@ -31,5 +31,4 @@ async def get_feed(
     )
 
     service = FeedService(db)
-    total, items = await service.get_feed(params)
-    return FeedResponse(total=total, items=items)
+    return await service.get_feed(params)

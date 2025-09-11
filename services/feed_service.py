@@ -1,6 +1,6 @@
 from typing import Dict, Any
 from schemas.recipe_schema import RecipeCard
-from schemas.feed_schema import FeedRequest
+from schemas.feed_schema import FeedRequest, FeedResponse
 from repositories.feed_repository import FeedRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -23,7 +23,4 @@ class FeedService:
             for r in items
         ]
 
-        return {
-            "total": total,
-            "items": items_serialized
-        }
+        return FeedResponse(total=total, items=items_serialized)
