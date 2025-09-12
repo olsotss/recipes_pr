@@ -18,10 +18,16 @@ class UserUpdate(BaseModel):
 
 class UserRead(UserBase):
     id: int
-    is_active: bool
     created_at: datetime
     updated_at: datetime
 
     class Config:
         orm_mode = True
 
+class UserShort(BaseModel):
+    id: int
+    email: EmailStr
+    username: str
+
+    class Config:
+        orm_mode = True
