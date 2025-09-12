@@ -8,7 +8,7 @@ class CommentBase(BaseModel):
     text: str
 
 class CommentCreate(CommentBase):
-    recipe_id: int
+    pass
 
 class CommentUpdate(BaseModel):
     text: Optional[str] = None
