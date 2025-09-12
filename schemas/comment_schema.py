@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
-from schemas.user_schema import UserRead
+from schemas.user_schema import UserShort
 
 class CommentBase(BaseModel):
     text: str
@@ -19,8 +19,7 @@ class CommentUpdate(BaseModel):
 class CommentRead(CommentBase):
     id: int
     recipe_id: int
-    user_id: int
-    user: UserRead
+    user: UserShort
     created_at: datetime
     
     class Config:
