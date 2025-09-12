@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends, Path, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -66,7 +66,8 @@ async def delete_comment(
     db: AsyncSession = Depends(get_db),
 ):
     service = CommentService(db)
-    success = await service.delete_comment(comment_id, user_id=1)
-    if success:
+    try:
+        await service.delete_comment(comment_id, user_id=1)
         return {"detail": "Comment deleted"}
-    return {"detail": "Comment not found"}
+    except HTTPException as e:
+        raise e
