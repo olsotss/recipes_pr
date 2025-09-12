@@ -39,8 +39,25 @@ class CommentService:
         
         return comment
 
-    async def get_comments_by_recipe(self, recipe_id: int, skip: int = 0, limit: int = 10) -> List[Comment]:
-        return await self.comment_repo.get_comment_by_recipe(recipe_id, skip, limit)
+    async def get_comments_by_recipe(self, recipe_id: int, skip: int = 0, limit: int = 10, sort_by: str = "created_at", sort_order: str = "desc") -> List[Comment]:
+        comments = await self.comment_repo.get_comment_by_recipe(
+            recipe_id=recipe_id,
+            skip=skip,
+            limit=limit,
+            sort_by=sort_by,
+            sort_order=sort_order
+        )
+
+        return [
+            CommentRead(
+                id=c.id,
+                text=c.text,
+                user_id=c.user_id,
+                recipe_id=c.recipe_id,
+                created_at=c.created_at,
+            )
+            for c in comments
+        ]
 
     async def update_comment(self, comment_id: int, user_id: int, data: CommentUpdate) -> Comment:
         comment = await self.comment_repo.update(comment_id, user_id, data)

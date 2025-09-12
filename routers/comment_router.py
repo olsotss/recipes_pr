@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.database import get_db
+from repositories.comment_repository import CommentRepository
 from schemas.comment_schema import CommentCreate, CommentUpdate, CommentRead
 from services.comment_service import CommentService
 
@@ -30,14 +31,23 @@ async def get_comment(
 
 
 @comment_router.get("/recipes/{recipe_id}", response_model=List[CommentRead])
-async def get_comments_for_recipe(
+async def get_comments(
     recipe_id: int,
-    skip: int = Query(0, description="Сколько пропустить"),
-    limit: int = Query(10, description="Сколько вернуть"),
-    db: AsyncSession = Depends(get_db),
+    skip: int = 0,
+    limit: int = 10,
+    sort_by: str = Query("created_at", description="Поле для сортировки: created_at или rating"),
+    sort_order: str = Query("desc", description="Порядок сортировки: asc или desc"),
+    db: AsyncSession = Depends(get_db)
 ):
-    service = CommentService(db)
-    return await service.get_comments_by_recipe(recipe_id, skip=skip, limit=limit)
+    comment_repo = CommentRepository(db)
+    comments = await comment_repo.get_comment_by_recipe(
+        recipe_id=recipe_id,
+        skip=skip,
+        limit=limit,
+        sort_by=sort_by,
+        sort_order=sort_order
+    )
+    return comments
 
 
 @comment_router.put("/{comment_id}", response_model=CommentRead)

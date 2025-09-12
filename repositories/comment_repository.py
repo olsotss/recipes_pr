@@ -38,12 +38,26 @@ class CommentRepository:
         res = await self.db.execute(stmt)
         return res.scalar_one_or_none()
 
-    async def get_comment_by_recipe(self, recipe_id: int, skip: int = 0, limit: int = 10) -> List[Comment]:
-        res = await self.db.execute(select(Comment)
-                                    .filter(Comment.recipe_id == recipe_id)
-                                    .order_by(Comment.created_at.desc())
-                                    .offset(skip)
-                                    .limit(limit))
+    async def get_comment_by_recipe(self, recipe_id: int, skip: int = 0, limit: int = 10, sort_by: str = "created_at", sort_order: str = "desc") -> List[Comment]:
+        if sort_by == "rating":
+            order_column = Comment.rating
+        else:
+            order_column = Comment.created_at
+
+        if sort_order == "desc":
+            order_column = order_column.desc()
+        else:
+            order_column = order_column.asc()
+
+        stmt = (
+            select(Comment)
+            .filter(Comment.recipe_id == recipe_id)
+            .order_by(order_column)
+            .offset(skip)
+            .limit(limit)
+        )
+
+        res = await self.db.execute(stmt)
         return res.scalars().all()
     
     async def update(self, comment_id: int, user_id: int, data: CommentUpdate) -> Optional[Comment]:
