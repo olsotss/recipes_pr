@@ -4,7 +4,8 @@ from fastapi import HTTPException, status
 
 from models.comment_model import Comment
 from repositories.comment_repository import CommentRepository
-from schemas.comment_schema import CommentCreate, CommentUpdate
+from schemas.comment_schema import CommentCreate, CommentRead, CommentUpdate
+from schemas.user_schema import UserShort
 
 
 class CommentService:
@@ -18,7 +19,17 @@ class CommentService:
         if not comment:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found")
         
-        return comment
+        return CommentRead(
+        id=comment.id,
+        text=comment.text,
+        recipe_id=comment.recipe_id,
+        created_at=comment.created_at,
+        user=UserShort(
+            id=comment.user.id,
+            email=comment.user.email,
+            username=comment.user.username,
+        )
+    )
 
     async def get_comment(self, comment_id: int, with_author: bool = False) -> Comment:
         comment = await self.comment_repo.get_comment_by_id(comment_id, with_author=with_author)

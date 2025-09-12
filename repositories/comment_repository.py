@@ -14,14 +14,20 @@ class CommentRepository:
     async def add(self, recipe_id: int, user_id: int, data: CommentCreate) -> Optional[Comment]:
         exists = await self.db.execute(select(Recipe.id).filter(Recipe.id == recipe_id))
 
-        if not exists.scalar_one_or_none:
+        if not exists.scalar_one_or_none():
             return None
-        
-        comment = Comment(**data.dict(), recipe_id = recipe_id, user_id = user_id)
-
+    
+        comment = Comment(**data.dict(), recipe_id=recipe_id, user_id=user_id)
+    
+        self.db.add(comment)
         await self.db.commit()
         await self.db.refresh(comment)
-        return comment
+        
+        stmt = select(Comment).options(selectinload(Comment.user)).filter(Comment.id == comment.id)
+        res = await self.db.execute(stmt)
+        comment_with_user = res.scalar_one()
+    
+        return comment_with_user
     
     async def get_comment_by_id(self, comment_id: int, with_author: bool = False) -> Optional[Comment]:
         stmt = select(Comment).filter(Comment.id == comment_id)
@@ -54,8 +60,10 @@ class CommentRepository:
 
     async def delete(self, comment_id: int, user_id: int) -> bool:
         comment = await self.get_comment_by_id(comment_id)
+
         if not comment or comment.user_id != user_id:
             return False
+        
         await self.db.delete(comment)
         await self.db.commit()
         return True
