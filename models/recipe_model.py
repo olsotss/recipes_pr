@@ -21,6 +21,6 @@ class Recipe(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    comments = relationship("Comment", back_populates="recipe", cascade="all, delete")
-    ratings = relationship("Rating", back_populates="recipe", cascade="all, delete")
-    collections = relationship("Collection", secondary=collection_recipes, back_populates="recipes")
+    comments = relationship("Comment", back_populates="recipe", cascade="all, delete", lazy="selectin")
+    ratings = relationship("Rating", back_populates="recipe", cascade="all, delete", lazy="selectin")
+    collections = relationship("Collection", secondary=collection_recipes, back_populates="recipes", lazy="selectin")

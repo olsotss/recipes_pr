@@ -17,4 +17,4 @@ class Collection(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    recipes = relationship("Recipe", secondary=collection_recipes, back_populates="collections")
+    recipes = relationship("Recipe", secondary=collection_recipes, back_populates="collections", lazy="selectin")

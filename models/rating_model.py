@@ -12,5 +12,5 @@ class Rating(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     recipe_id = Column(Integer, ForeignKey("recipes.id", ondelete="CASCADE"))
 
-    user = relationship("User", back_populates="ratings")
-    recipe = relationship("Recipe", back_populates="ratings")
+    user = relationship("User", back_populates="ratings", lazy="selectin")
+    recipe = relationship("Recipe", back_populates="ratings", lazy="selectin")
