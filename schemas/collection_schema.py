@@ -2,6 +2,8 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 
+from .recipe_schema import RecipeCard
+
 class CollectionBase(BaseModel):
     title: str
     description: Optional[str] = None
@@ -19,7 +21,7 @@ class CollectionUpdate(BaseModel):
 class CollectionRead(CollectionBase):
     id: int
     user_id: int
-    recipes: List[str] = []
+    recipes: List[RecipeCard] = []
     created_at: datetime
     updated_at: datetime
 
