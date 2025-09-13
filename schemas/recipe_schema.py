@@ -11,7 +11,7 @@ class RecipeBase(BaseModel):
     cooking_time: int
 
 class RecipeCreate(RecipeBase):
-    collection_ids: Optional[List[int]] = []
+    pass
 
 class RecipeUpdate(BaseModel):
     title: Optional[str] = None
@@ -20,7 +20,6 @@ class RecipeUpdate(BaseModel):
     steps: Optional[str] = None
     image: Optional[str] = None
     cooking_time: Optional[int] = None
-    collection_ids: Optional[List[int]] = None
 
 class RecipeRead(RecipeBase):
     id: int

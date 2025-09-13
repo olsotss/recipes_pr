@@ -23,4 +23,4 @@ class Recipe(Base):
 
     comments = relationship("Comment", back_populates="recipe", cascade="all, delete", lazy="selectin")
     ratings = relationship("Rating", back_populates="recipe", cascade="all, delete", lazy="selectin")
-    collections = relationship("Collection", secondary=collection_recipes, back_populates="recipes", lazy="selectin")
+    
