@@ -1,6 +1,9 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import List, Optional
 from datetime import datetime
+
+from schemas.collection_schema import CollectionRead
+from schemas.recipe_schema import RecipeCard
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -31,3 +34,12 @@ class UserShort(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserWithContent(BaseModel):
+    id: int
+    username: str
+    collections: List[CollectionRead] = []
+    recipes: List[RecipeCard] = []
+
+    class Config:
+        from_attributes = True
