@@ -22,14 +22,11 @@ class RecipeService:
         return await self.recipe_repo.get_recipes_by_ids(ids)
 
     async def create_recipe(self, data: RecipeCreate, user_id: int) -> Recipe:
-        # создаем объект с user_id
         recipe = Recipe(**data.dict(exclude={"collection_ids"}), user_id=user_id)
 
-        # Сначала добавляем рецепт в сессию, чтобы он имел PK
         self.db.add(recipe)
         await self.db.flush()
 
-        # Присваиваем коллекции (если есть)
         if data.collection_ids:
             collections = await self.collection_repo.get_collections_by_ids(data.collection_ids)
             recipe.collections = collections
