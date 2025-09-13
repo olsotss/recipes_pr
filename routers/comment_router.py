@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from cur_user import get_current_user_id
 from database.database import get_db
 from repositories.comment_repository import CommentRepository
 from schemas.comment_schema import CommentCreate, CommentUpdate, CommentRead
@@ -14,10 +15,11 @@ comment_router = APIRouter()
 async def add_comment(
     recipe_id: int = Path(..., description="ID рецепта"),
     data: CommentCreate = Body(...),
+    user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db),
 ):
     service = CommentService(db)
-    comment = await service.add_comment(recipe_id, user_id=1, data=data)
+    comment = await service.add_comment(recipe_id, user_id=user_id, data=data)
     return comment
 
 
@@ -54,20 +56,22 @@ async def get_comments(
 async def update_comment(
     comment_id: int,
     data: CommentUpdate = Depends(),
+    user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db),
 ):
     service = CommentService(db)
-    return await service.update_comment(comment_id, user_id=1, data=data)
+    return await service.update_comment(comment_id, user_id=user_id, data=data)
 
 
 @comment_router.delete("/{comment_id}")
 async def delete_comment(
     comment_id: int,
+    user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db),
 ):
     service = CommentService(db)
     try:
-        await service.delete_comment(comment_id, user_id=1)
+        await service.delete_comment(comment_id, user_id=user_id)
         return {"detail": "Comment deleted"}
     except HTTPException as e:
         raise e

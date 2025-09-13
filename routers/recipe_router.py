@@ -1,14 +1,12 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from cur_user import get_current_user_id
 from schemas.recipe_schema import RecipeCreate, RecipeUpdate, RecipeRead
 from services.recipe_service import RecipeService
 from database.database import get_db
 
 recipe_router = APIRouter()
-
-def get_current_user_id() -> int:
-    return 1  # для теста
 
 @recipe_router.post("/", response_model=RecipeRead)
 async def create_recipe(
