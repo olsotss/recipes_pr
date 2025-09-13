@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 
 from models.collection_model import Collection
-from models.recipe_model import Recipe
 from repositories.collection_repository import CollectionRepository
 from repositories.recipe_repository import RecipeRepository
 from schemas.collection_schema import CollectionCreate, CollectionUpdate
@@ -22,9 +21,13 @@ class CollectionService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Collection not found")
 
         return collection
+    
+    async def get_user_collections(self, user_id: int) -> List[Collection]:
+        return await self.collection_repo.list_user_collections(user_id)
 
-    async def get_collections_by_ids(self, ids: List[int], with_recipes: bool = False) -> List[Collection]:
+    async def get_collections_by_ids(self, ids: int | list[int], with_recipes: bool = False):
         return await self.collection_repo.get_collections_by_ids(ids)
+
 
     async def create_collection(self, data: CollectionCreate, user_id: int) -> Collection:
         collection = Collection(**data.dict(exclude={"recipe_ids"}), user_id=user_id)
@@ -67,11 +70,11 @@ class CollectionService:
 
     async def add_recipe_to_collection(self, collection_id: int, user_id: int, recipe_id: int) -> Collection:
         collection = await self.collection_repo.get_by_id(collection_id, with_recipes=True)
-
+    
         if not collection or collection.user_id != user_id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Collection not found")
-
-        recipe = await self.recipe_repo.get_recipe(recipe_id)
+        
+        recipe = await self.recipe_repo.get_recipe_by_id(recipe_id)
         if not recipe:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found")
 
@@ -79,6 +82,7 @@ class CollectionService:
             collection.recipes.append(recipe)
 
         return await self.collection_repo.update(collection)
+
 
     async def remove_recipe_from_collection(self, collection_id: int, user_id: int, recipe_id: int) -> Collection:
         collection = await self.collection_repo.get_by_id(collection_id, with_recipes=True)
