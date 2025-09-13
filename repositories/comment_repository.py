@@ -39,9 +39,7 @@ class CommentRepository:
         return res.scalar_one_or_none()
 
     async def get_comment_by_recipe(self, recipe_id: int, skip: int = 0, limit: int = 10, sort_by: str = "created_at", sort_order: str = "desc") -> List[Comment]:
-        if sort_by == "rating":
-            order_column = Comment.rating
-        else:
+        if sort_by == "created_at":
             order_column = Comment.created_at
 
         if sort_order == "desc":
