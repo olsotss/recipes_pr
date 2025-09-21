@@ -23,7 +23,6 @@ class RecipeService:
         recipe = Recipe(**data.dict(), user_id=user_id)
     
         self.db.add(recipe)
-        await self.db.flush()
         await self.db.commit()
         await self.db.refresh(recipe)
     
